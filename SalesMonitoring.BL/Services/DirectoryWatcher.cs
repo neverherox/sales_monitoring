@@ -1,7 +1,5 @@
-﻿using SalesMonitoring.BL.Models;
-using SalesMonitoring.BL.Services.Contracts;
+﻿using SalesMonitoring.BL.Services.Contracts;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace SalesMonitoring.BL.Services
@@ -10,6 +8,8 @@ namespace SalesMonitoring.BL.Services
     {
         private FileSystemWatcher watcher;
         public event EventHandler<FileSystemEventArgs> New;
+        public event EventHandler Stopping;
+
         private bool _disposed = false;
 
         public DirectoryWatcher(FileSystemWatcher watcher)
@@ -29,6 +29,13 @@ namespace SalesMonitoring.BL.Services
         public void Stop()
         {
             watcher.EnableRaisingEvents = false;
+            Stopping?.Invoke(this, null);
+        }
+
+        public void ClearEvents()
+        {
+            New = null;
+            Stopping = null;
         }
 
         public void Dispose()
@@ -44,7 +51,7 @@ namespace SalesMonitoring.BL.Services
             }
             if (disposing)
             {
-                New = null;
+                ClearEvents();
                 watcher.Created -= OnFileSystemEvent;
                 watcher.Dispose();
             }

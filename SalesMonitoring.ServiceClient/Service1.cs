@@ -10,6 +10,7 @@ namespace SalesMonitoring.ServiceClient
     public partial class Service1 : ServiceBase
     {
         private ITaskManager manager;
+        private IDirectoryWatcher watcher;
         public Service1()
         {
             InitializeComponent();
@@ -17,21 +18,19 @@ namespace SalesMonitoring.ServiceClient
 
         protected override void OnStart(string[] args)
         {
-            IDirectoryWatcher watcher = new DirectoryWatcher(
-                   new FileSystemWatcher(ConfigurationManager.AppSettings["sourceFolder"],
-                   ConfigurationManager.AppSettings["searchPattern"]));
-            manager = new TaskManager(watcher,
-                new CSVParser(),
-                new CustomTaskScheduler(3),
-                new DirectoryHandler(ConfigurationManager.AppSettings["destFolder"]),
-                new Logger(ConfigurationManager.AppSettings["logFile"]));
-            manager.Start();
+            watcher = new DirectoryWatcher(
+                  new FileSystemWatcher(ConfigurationManager.AppSettings["sourceFolder"],
+                  ConfigurationManager.AppSettings["searchPattern"]));
+            manager = new TaskManager(new CustomTaskScheduler(3));
+            manager.RegisterWatcherEventHandlers(watcher);
+            watcher.Start();
         }
 
         protected override void OnStop()
         {
-            manager.Stop();
+            watcher.Stop();
             manager.Dispose();
+            watcher.Dispose();
         }
     }
 }

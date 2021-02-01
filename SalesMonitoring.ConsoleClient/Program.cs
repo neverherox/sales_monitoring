@@ -1,7 +1,6 @@
 ﻿using SalesMonitoring.BL.Services;
 using SalesMonitoring.BL.Services.Contracts;
 using System;
-using System.Collections.Concurrent;
 using System.Configuration;
 using System.IO;
 
@@ -14,15 +13,13 @@ namespace SalesMonitoring.ConsoleClient
             IDirectoryWatcher watcher = new DirectoryWatcher(
                     new FileSystemWatcher(ConfigurationManager.AppSettings["sourceFolder"],
                     ConfigurationManager.AppSettings["searchPattern"]));
-            ITaskManager manager = new TaskManager(watcher,
-                new CSVParser(),
-                new CustomTaskScheduler(3),
-                new DirectoryHandler(ConfigurationManager.AppSettings["destFolder"]),
-                new Logger(ConfigurationManager.AppSettings["logFile"]));
-            manager.Start();
+            ITaskManager manager = new TaskManager(new CustomTaskScheduler(3));
+            manager.RegisterWatcherEventHandlers(watcher);
+            watcher.Start();
             Console.ReadKey();
-            manager.Stop();
+            watcher.Stop();
             manager.Dispose();
+            watcher.Dispose();
             Console.ReadKey();
         }
     }

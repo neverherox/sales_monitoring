@@ -17,9 +17,9 @@ namespace SalesMonitoring.BL.Services
             {
                 File.Move(filePath + "\\" + fileName, directoryPath + "\\" + fileName);
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                throw new InvalidOperationException("cannot backup file", e);
+                throw new InvalidOperationException("cannot backup file");
             }
         }
     }

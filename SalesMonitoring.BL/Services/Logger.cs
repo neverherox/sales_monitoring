@@ -6,49 +6,40 @@ namespace SalesMonitoring.BL.Services
 {
     public class Logger : ILogger
     {
-        string filePath;
-        private bool _disposed = false;
-        private StreamWriter writer;
+        private string filePath;
+        private static readonly object locker = new object();
+        private static StreamWriter writer;
         public Logger(string filePath)
         {
             this.filePath = filePath;
-            writer = new StreamWriter(this.filePath, false);
         }
         public void LogInfo(string message)
         {
-            lock (writer)
+            lock (locker)
             {
                 try
                 {
-                    writer.WriteLine("Date: " + DateTime.Now.ToString() + " Log info: " + message);
+                    if (writer == null)
+                    {
+                        writer = new StreamWriter(filePath);
+                    }
+                    else
+                    {
+                        writer = File.AppendText(filePath);
+                    }
+                    writer.WriteLine(message);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
-                    throw new InvalidOperationException("cannot log message", e);
+                    throw new InvalidOperationException("cannot log message");
                 }
+                finally
+                {
+                    writer.Close();
+                    writer.Dispose();
+                }
+                
             }
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-            if (disposing)
-            {
-                writer.Close();
-                writer.Dispose();
-            }
-            _disposed = true;
-        }
-        ~Logger()
-        {
-            Dispose();
         }
     }
 }

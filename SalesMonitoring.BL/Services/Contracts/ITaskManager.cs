@@ -2,7 +2,8 @@
 
 namespace SalesMonitoring.BL.Services.Contracts
 {
-    public interface ITaskManager : IProcessHandler, IDisposable
+    public interface ITaskManager : IDisposable
     {
+        void RegisterWatcherEventHandlers(IDirectoryWatcher watcher);
     }
 }

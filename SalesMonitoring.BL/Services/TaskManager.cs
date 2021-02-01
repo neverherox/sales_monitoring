@@ -1,8 +1,9 @@
-﻿using SalesMonitoring.BL.Services.Contracts;
+﻿using SalesMonitoring.BL.EventArgs;
+using SalesMonitoring.BL.Models;
+using SalesMonitoring.BL.Services.Contracts;
 using SalesMonitoring.DAL.Context;
-using SalesMonitoring.DAL.UnitsOfWork;
-using SalesMonitoring.DML.Models;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,82 +12,55 @@ namespace SalesMonitoring.BL.Services
 {
     public class TaskManager : ITaskManager
     {
-        private IDirectoryWatcher watcher;
-        private IParser parser;
         private CustomTaskScheduler scheduler;
-        private IDirectoryHandler handler;
-        private ILogger logger;
-
         private CancellationTokenSource tokenSource;
-        private Object locker = new Object();
         private bool _disposed = false;
-        public TaskManager(IDirectoryWatcher watcher, IParser parser, CustomTaskScheduler scheduler, IDirectoryHandler handler, ILogger logger)
+        public TaskManager(CustomTaskScheduler scheduler)
         {
             using (var salesContext = new SalesContext())
             {
                 salesContext.Database.CreateIfNotExists();
             }
-
             tokenSource = new CancellationTokenSource();
-
-            this.watcher = watcher;
-            this.parser = parser;
             this.scheduler = scheduler;
-            this.handler = handler;
-            this.logger = logger;
-            watcher.New += RunTask;
         }
-        private void RunTask(object sender, FileSystemEventArgs e)
+
+        public virtual void RegisterWatcherEventHandlers(IDirectoryWatcher watcher)
+        {
+            watcher.New += RunLogicTask;
+            watcher.Stopping += CancelTasks;
+        }
+        private void RunLogicTask(object sender, FileSystemEventArgs e)
         {
             var task = new Task(() =>
             {
-                logger.LogInfo(Task.CurrentId + " is started");
-                var sales = parser.Parse(e.FullPath);
-                logger.LogInfo(Task.CurrentId + " parsed file");
-                foreach (var sale in sales)
+                LogicTask logicTaskHandler = new LogicTaskHandler(
+                   new CSVParser(),
+                   new DirectoryHandler(ConfigurationManager.AppSettings["destFolder"]),
+                   new Logger(ConfigurationManager.AppSettings["logFile"]));
+                try
                 {
-                    lock (locker)
+                    logicTaskHandler.Execute(new TaskHandlerEventArgs
                     {
-                        var context = new SalesContext();
-                        var uow = new SalesUnitOfWork(context);
-                        try
-                        {
-                            uow.AddSale
-                            (
-                                new Client { Name = sale.CustomerName },
-                                new Product { Name = sale.ProductName, Price = sale.ProductPrice },
-                                sale.Date
-                             );
-                            uow.SaveContext();
-                            logger.LogInfo(Task.CurrentId + " is added to db " + sale.ToString() + " from " + e.Name);
-                        }
-                        catch (Exception exc)
-                        {
-                            throw new InvalidOperationException("cannot add info " + sale.ToString() + exc.Message, exc);
-                        }
-                        finally
-                        {
-                            uow.Dispose();
-                            context.Dispose();
-                        }
-                    }
+                        filePath = e.FullPath,
+                        fileName = e.Name
+                    });
                 }
-                handler.BackUp(e.FullPath.Remove(e.FullPath.IndexOf(e.Name), e.Name.Length), e.Name);
-                logger.LogInfo(Task.CurrentId + " is ended");
-
+                finally
+                {
+                    logicTaskHandler.Dispose();
+                }
             }, tokenSource.Token);
             task.Start(scheduler);
         }
-        public void Start()
+        private void CancelTasks(object sender, System.EventArgs e)
         {
-            watcher.Start();
+            if (tokenSource != null)
+            {
+                tokenSource.Cancel();
+            }
         }
 
-        public void Stop()
-        {
-            watcher.Stop();
-            tokenSource.Cancel();
-        }
         public void Dispose()
         {
             Dispose(true);
@@ -100,8 +74,6 @@ namespace SalesMonitoring.BL.Services
             }
             if (disposing)
             {
-                logger.Dispose();
-                watcher.Dispose();
                 tokenSource.Dispose();
             }
             _disposed = true;

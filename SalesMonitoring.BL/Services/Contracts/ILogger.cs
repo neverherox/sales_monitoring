@@ -2,7 +2,7 @@
 
 namespace SalesMonitoring.BL.Services.Contracts
 {
-    public interface ILogger : IDisposable
+    public interface ILogger
     {
         void LogInfo(string message);
     }

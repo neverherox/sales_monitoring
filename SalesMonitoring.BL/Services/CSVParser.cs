@@ -24,9 +24,9 @@ namespace SalesMonitoring.BL.Services
                     }
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                throw new InvalidOperationException("cannot parse file", e);
+                throw new InvalidOperationException("cannot parse file");
             }
             return sales;
         }

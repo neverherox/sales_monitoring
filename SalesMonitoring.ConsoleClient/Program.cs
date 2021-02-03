@@ -13,14 +13,13 @@ namespace SalesMonitoring.ConsoleClient
             IDirectoryWatcher watcher = new DirectoryWatcher(
                     new FileSystemWatcher(ConfigurationManager.AppSettings["sourceFolder"],
                     ConfigurationManager.AppSettings["searchPattern"]));
-            ITaskManager manager = new TaskManager(new CustomTaskScheduler(3));
+            ITaskManager manager = new TaskManager(2);
             manager.RegisterWatcherEventHandlers(watcher);
             watcher.Start();
             Console.ReadKey();
             watcher.Stop();
             manager.Dispose();
             watcher.Dispose();
-            Console.ReadKey();
         }
     }
 }

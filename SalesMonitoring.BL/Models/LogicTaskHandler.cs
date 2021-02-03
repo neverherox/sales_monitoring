@@ -1,34 +1,32 @@
 ﻿using SalesMonitoring.BL.EventArgs;
+using SalesMonitoring.BL.Services;
 using SalesMonitoring.BL.Services.Contracts;
 using SalesMonitoring.DAL.Context;
 using SalesMonitoring.DAL.UnitsOfWork;
 using SalesMonitoring.DML.Models;
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 
 namespace SalesMonitoring.BL.Models
 {
     public class LogicTaskHandler : LogicTask
     {
-        private IParser parser;
-        private IDirectoryHandler handler;
         private ILogger logger;
-
-        public LogicTaskHandler(IParser parser, IDirectoryHandler handler, ILogger logger)
+        private static object locker = new object();
+        public LogicTaskHandler()
         {
             BeforeExecuting += ParseCSV;
             Executing += AddSale;
             AfterExecuting += BackUpFile;
-
-            this.parser = parser;
-            this.handler = handler;
-            this.logger = logger;
+            logger = new Logger(ConfigurationManager.AppSettings["logFile"]);
         }
 
         private void ParseCSV(object sender, TaskEventArgs arg)
         {
             var handlerArg = arg as TaskHandlerEventArgs;
-            handlerArg.sales = parser.Parse(handlerArg.filePath);
+            var parser = new CSVParser();
+            handlerArg.sales = parser.Parse(handlerArg.filePath + handlerArg.fileName);
             logger.LogInfo(Task.CurrentId + " parsed file " + handlerArg.fileName);
         }
         private void AddSale(object sender, TaskEventArgs arg)
@@ -38,32 +36,37 @@ namespace SalesMonitoring.BL.Models
             {
                 var context = new SalesContext();
                 var uow = new SalesUnitOfWork(context);
-                try
+                lock (locker)
                 {
-                    uow.AddSale
-                    (
-                        new Client { Name = sale.CustomerName },
-                        new Product { Name = sale.ProductName, Price = sale.ProductPrice },
-                        sale.Date
-                     );
-                    uow.SaveContext();
-                    logger.LogInfo(Task.CurrentId + " added sale " + sale.ToString());
-                }
-                catch (Exception)
-                {
-                    logger.LogInfo(Task.CurrentId + " failed adding sale " + sale.ToString());
-                }
-                finally
-                {
-                    uow.Dispose();
-                    context.Dispose();
+                    try
+                    {
+                        uow.AddSale
+                        (
+                            new Client { Name = sale.CustomerName },
+                            new Product { Name = sale.ProductName, Price = sale.ProductPrice },
+                            sale.Date
+                         );
+                        logger.LogInfo(Task.CurrentId + " added sale " + sale.ToString());
+                    }
+                    catch (Exception)
+                    {
+                        logger.LogInfo(Task.CurrentId + " failed adding " + sale.ToString() + " from " + handlerArg.fileName);
+                    }
+                    finally
+                    {
+                        uow.SaveContext();
+                        uow.Dispose();
+                    }
                 }
             }
+
         }
+
         private void BackUpFile(object sender, TaskEventArgs arg)
         {
             var handlerArg = arg as TaskHandlerEventArgs;
-            handler.BackUp(handlerArg.filePath.Remove(handlerArg.filePath.IndexOf(handlerArg.fileName), handlerArg.fileName.Length), handlerArg.fileName);
+            var handler = new DirectoryHandler(ConfigurationManager.AppSettings["processedFolder"]);
+            handler.BackUp(handlerArg.filePath, handlerArg.fileName);
             logger.LogInfo(Task.CurrentId + " back upped file " + handlerArg.fileName);
         }
     }

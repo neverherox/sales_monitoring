@@ -3,7 +3,7 @@ using SalesMonitoring.BL.Models;
 using SalesMonitoring.BL.Services.Contracts;
 using SalesMonitoring.DAL.Context;
 using System;
-using System.Configuration;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,17 +12,19 @@ namespace SalesMonitoring.BL.Services
 {
     public class TaskManager : ITaskManager
     {
-        private CustomTaskScheduler scheduler;
         private CancellationTokenSource tokenSource;
+        private SemaphoreSlim concurrencySemaphore;
+        private IProducerConsumerCollection<Task> runningTasks;
         private bool _disposed = false;
-        public TaskManager(CustomTaskScheduler scheduler)
+        public TaskManager(int maxConcurrency)
         {
             using (var salesContext = new SalesContext())
             {
                 salesContext.Database.CreateIfNotExists();
             }
+            runningTasks = new ConcurrentStack<Task>();
             tokenSource = new CancellationTokenSource();
-            this.scheduler = scheduler;
+            concurrencySemaphore = new SemaphoreSlim(maxConcurrency);
         }
 
         public virtual void RegisterWatcherEventHandlers(IDirectoryWatcher watcher)
@@ -32,33 +34,27 @@ namespace SalesMonitoring.BL.Services
         }
         private void RunLogicTask(object sender, FileSystemEventArgs e)
         {
-            var task = new Task(() =>
+            Task task = null;
+            task = Task.Run(() =>
             {
-                LogicTask logicTaskHandler = new LogicTaskHandler(
-                   new CSVParser(),
-                   new DirectoryHandler(ConfigurationManager.AppSettings["destFolder"]),
-                   new Logger(ConfigurationManager.AppSettings["logFile"]));
-                try
+                runningTasks.TryAdd(task);
+                concurrencySemaphore.Wait();
+                using (LogicTask logicTaskHandler = new LogicTaskHandler())
                 {
-                    logicTaskHandler.Execute(new TaskHandlerEventArgs
+                    logicTaskHandler.Execute
+                    (new TaskHandlerEventArgs
                     {
-                        filePath = e.FullPath,
-                        fileName = e.Name
+                        fileName = e.Name,
+                        filePath = e.FullPath.Remove(e.FullPath.IndexOf(e.Name), e.Name.Length),
                     });
                 }
-                finally
-                {
-                    logicTaskHandler.Dispose();
-                }
+                concurrencySemaphore.Release();
+                runningTasks.TryTake(out task);
             }, tokenSource.Token);
-            task.Start(scheduler);
         }
         private void CancelTasks(object sender, System.EventArgs e)
         {
-            if (tokenSource != null)
-            {
-                tokenSource.Cancel();
-            }
+            tokenSource.Cancel();
         }
 
         public void Dispose()
@@ -74,7 +70,9 @@ namespace SalesMonitoring.BL.Services
             }
             if (disposing)
             {
+                Task.WaitAll(runningTasks.ToArray());
                 tokenSource.Dispose();
+                concurrencySemaphore.Dispose();
             }
             _disposed = true;
         }

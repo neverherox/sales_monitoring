@@ -7,8 +7,9 @@ namespace SalesMonitoring.BL.Services
     public class Logger : ILogger
     {
         private string filePath;
-        private static readonly object locker = new object();
         private static StreamWriter writer;
+        private static object locker = new object();
+
         public Logger(string filePath)
         {
             this.filePath = filePath;
@@ -37,8 +38,7 @@ namespace SalesMonitoring.BL.Services
                 {
                     writer.Close();
                     writer.Dispose();
-                }
-                
+                }    
             }
         }
     }

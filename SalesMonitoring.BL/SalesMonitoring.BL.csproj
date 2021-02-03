@@ -98,7 +98,6 @@
     <Compile Include="Services\Contracts\ILogger.cs" />
     <Compile Include="Services\Contracts\IProcessHandler.cs" />
     <Compile Include="Services\Contracts\ITaskManager.cs" />
-    <Compile Include="Services\CustomTaskScheduler.cs" />
     <Compile Include="DTO\SaleInfoDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Contracts\IParser.cs" />

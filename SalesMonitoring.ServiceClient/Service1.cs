@@ -19,9 +19,9 @@ namespace SalesMonitoring.ServiceClient
         protected override void OnStart(string[] args)
         {
             watcher = new DirectoryWatcher(
-                  new FileSystemWatcher(ConfigurationManager.AppSettings["sourceFolder"],
-                  ConfigurationManager.AppSettings["searchPattern"]));
-            manager = new TaskManager(new CustomTaskScheduler(3));
+                    new FileSystemWatcher(ConfigurationManager.AppSettings["sourceFolder"],
+                    ConfigurationManager.AppSettings["searchPattern"]));
+            manager = new TaskManager(2);
             manager.RegisterWatcherEventHandlers(watcher);
             watcher.Start();
         }

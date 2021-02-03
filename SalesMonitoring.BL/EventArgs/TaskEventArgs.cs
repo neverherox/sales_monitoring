@@ -1,6 +1,6 @@
 ﻿namespace SalesMonitoring.BL.EventArgs
 {
-    public class TaskEventArgs
+    public abstract class TaskEventArgs
     {
         
     }

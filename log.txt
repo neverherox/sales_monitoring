@@ -1,60 +1,36 @@
-1 parsed file allsales — копия (11) — копия.csv
-2 parsed file allsales — копия (11) — копия — копия.csv
-3 parsed file allsales — копия (12) — копия — копия.csv
-3 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
-2 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
+1 parsed file allsales — копия (64) — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия.csv
+2 parsed file allsales — копия (65) — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия.csv
 1 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
-3 added sale 28.01.2020 0:00:00 Helen jeans 2,5
-2 added sale 28.01.2020 0:00:00 Helen jeans 2,5
+2 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
 1 added sale 28.01.2020 0:00:00 Helen jeans 2,5
-3 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
-2 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
+2 added sale 28.01.2020 0:00:00 Helen jeans 2,5
 1 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
-3 added sale 28.01.2020 0:00:00 Mark skirt 2,5
-2 added sale 28.01.2020 0:00:00 Mark skirt 2,5
+2 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
 1 added sale 28.01.2020 0:00:00 Mark skirt 2,5
-3 added sale 28.01.2020 0:00:00 Pavel dad 2,5
-2 added sale 28.01.2020 0:00:00 Pavel dad 2,5
+2 added sale 28.01.2020 0:00:00 Mark skirt 2,5
 1 added sale 28.01.2020 0:00:00 Pavel dad 2,5
-3 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
-2 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
+2 added sale 28.01.2020 0:00:00 Pavel dad 2,5
 1 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
-3 added sale 28.01.2020 0:00:00 Helen watches 2,5
-2 added sale 28.01.2020 0:00:00 Helen watches 2,5
+2 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
 1 added sale 28.01.2020 0:00:00 Helen watches 2,5
-3 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
-2 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
+2 added sale 28.01.2020 0:00:00 Helen watches 2,5
 1 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
-3 added sale 28.01.2020 0:00:00 Pavel ball 2,5
-2 added sale 28.01.2020 0:00:00 Pavel ball 2,5
+2 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
 1 added sale 28.01.2020 0:00:00 Pavel ball 2,5
-3 added sale 28.01.2020 0:00:00 Maria ring 2,5
-2 added sale 28.01.2020 0:00:00 Maria ring 2,5
+2 added sale 28.01.2020 0:00:00 Pavel ball 2,5
 1 added sale 28.01.2020 0:00:00 Maria ring 2,5
-3 back upped file allsales — копия (12) — копия — копия.csv
-2 back upped file allsales — копия (11) — копия — копия.csv
-1 back upped file allsales — копия (11) — копия.csv
-4 parsed file allsales — копия (13) — копия — копия.csv
-4 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
-4 added sale 28.01.2020 0:00:00 Helen jeans 2,5
-4 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
-4 added sale 28.01.2020 0:00:00 Mark skirt 2,5
-4 added sale 28.01.2020 0:00:00 Pavel dad 2,5
-4 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
-4 added sale 28.01.2020 0:00:00 Helen watches 2,5
-4 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
-4 added sale 28.01.2020 0:00:00 Pavel ball 2,5
-4 added sale 28.01.2020 0:00:00 Maria ring 2,5
-4 back upped file allsales — копия (13) — копия — копия.csv
-5 parsed file allsales — копия (14) — копия — копия.csv
-5 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
-5 added sale 28.01.2020 0:00:00 Helen jeans 2,5
-5 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
-5 added sale 28.01.2020 0:00:00 Mark skirt 2,5
-5 added sale 28.01.2020 0:00:00 Pavel dad 2,5
-5 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
-5 added sale 28.01.2020 0:00:00 Helen watches 2,5
-5 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
-5 added sale 28.01.2020 0:00:00 Pavel ball 2,5
-5 added sale 28.01.2020 0:00:00 Maria ring 2,5
-5 back upped file allsales — копия (14) — копия — копия.csv
+1 back upped file allsales — копия (64) — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия.csv
+2 added sale 28.01.2020 0:00:00 Maria ring 2,5
+2 back upped file allsales — копия (65) — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия.csv
+3 parsed file allsales — копия (66) — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия.csv
+3 added sale 28.01.2020 0:00:00 Kirill shirt 2,5
+3 added sale 28.01.2020 0:00:00 Helen jeans 2,5
+3 added sale 28.01.2020 0:00:00 Kirill trousers 2,5
+3 added sale 28.01.2020 0:00:00 Mark skirt 2,5
+3 added sale 28.01.2020 0:00:00 Pavel dad 2,5
+3 added sale 28.01.2020 0:00:00 Helen sneakers 2,5
+3 added sale 28.01.2020 0:00:00 Helen watches 2,5
+3 added sale 28.01.2020 0:00:00 Kirill glasses 2,5
+3 added sale 28.01.2020 0:00:00 Pavel ball 2,5
+3 added sale 28.01.2020 0:00:00 Maria ring 2,5
+3 back upped file allsales — копия (66) — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия — копия.csv

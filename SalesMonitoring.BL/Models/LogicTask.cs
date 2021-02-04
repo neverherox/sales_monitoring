@@ -1,5 +1,8 @@
 ﻿using SalesMonitoring.BL.EventArgs;
+using SalesMonitoring.BL.Services;
 using System;
+using System.Configuration;
+using System.Transactions;
 
 namespace SalesMonitoring.BL.Models
 {
@@ -12,9 +15,17 @@ namespace SalesMonitoring.BL.Models
 
         public virtual void Execute(TaskEventArgs arg)
         {
-            BeforeExecuting?.Invoke(this, arg);
-            Executing?.Invoke(this, arg);
-            AfterExecuting?.Invoke(this, arg);
+            var logger = new Logger(ConfigurationManager.AppSettings["logFile"]);
+            try
+            { 
+                BeforeExecuting?.Invoke(this, arg);
+                Executing?.Invoke(this, arg);
+                AfterExecuting?.Invoke(this, arg);
+            }
+            catch(InvalidOperationException exc)
+            {
+                logger.LogInfo(exc.Message);
+            }
         }
         public void ClearEvents()
         {

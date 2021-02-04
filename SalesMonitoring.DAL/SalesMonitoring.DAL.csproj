@@ -51,7 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Configurations\ClientConfiguration.cs" />
+    <Compile Include="Context\Configurations\OrderConfiguration.cs" />
+    <Compile Include="Context\Configurations\ProductConfiguration.cs" />
     <Compile Include="Context\SalesContext.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Contracts\IGenericRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -69,7 +73,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

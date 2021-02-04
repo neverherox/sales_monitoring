@@ -7,6 +7,7 @@ namespace SalesMonitoring.BL.Services
     public class DirectoryHandler : IDirectoryHandler
     {
         private string directoryPath;
+
         public DirectoryHandler(string directoryPath)
         {
             this.directoryPath = directoryPath;
@@ -17,9 +18,9 @@ namespace SalesMonitoring.BL.Services
             {
                 File.Move(filePath + "\\" + fileName, directoryPath + "\\" + fileName);
             }
-            catch (IOException)
+            catch (IOException ex)
             {
-                throw new InvalidOperationException("cannot backup file");
+                throw new InvalidOperationException("cannot backup file" + ex.Message);
             }
         }
     }

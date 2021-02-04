@@ -46,15 +46,15 @@ namespace SalesMonitoring.BL.Models
                             new Product { Name = sale.ProductName, Price = sale.ProductPrice },
                             sale.Date
                          );
+                        uow.SaveContext();
                         logger.LogInfo(Task.CurrentId + " added sale " + sale.ToString());
                     }
                     catch (Exception)
                     {
-                        logger.LogInfo(Task.CurrentId + " failed adding " + sale.ToString() + " from " + handlerArg.fileName);
+                        throw new InvalidOperationException(Task.CurrentId + " failed adding " + sale.ToString() + " from " + handlerArg.fileName);
                     }
                     finally
                     {
-                        uow.SaveContext();
                         uow.Dispose();
                     }
                 }
